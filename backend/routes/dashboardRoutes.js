@@ -1,0 +1,50 @@
+const express = require('express');
+const router = express.Router();
+const { getDashboardStats, getDashboardArtifacts } = require('../services/dashboardService');
+const { requireAuth, requireCandidate } = require('../middleware/authMiddleware');
+
+router.get('/stats', requireAuth, requireCandidate, async (req, res) => {
+  try {
+    const stats = await getDashboardStats(req.user.id);
+    res.json({ success: true, data: stats });
+  } catch (error) {
+    const detail = String(error.message || error.cause?.message || '').toLowerCase();
+    const category = /max clients|connection pool|connection reset|timed? out/.test(detail) ? 'connection' :
+      /does not exist|unknown column|invalid field/.test(detail) ? 'schema' :
+      /prepared statement/.test(detail) ? 'prepared_statement' : 'database_query';
+    console.error(JSON.stringify({ event: 'dashboard_stats_failed', status: 500, errorCode: String(error.code || error.meta?.code || error.name || 'unknown').slice(0, 40), category }));
+    res.status(500).json({ success: false, message: 'Could not load the dashboard.' });
+  }
+});
+
+router.get('/artifacts', requireAuth, requireCandidate, async (req, res) => {
+  try {
+    const artifacts = await getDashboardArtifacts(req.user.id);
+    res.json({ success: true, data: artifacts });
+  } catch (error) {
+    const detail = String(error.message || error.cause?.message || '').toLowerCase();
+    const category = /max clients|connection pool|connection reset|timed? out/.test(detail) ? 'connection' :
+      /does not exist|unknown column|invalid field/.test(detail) ? 'schema' :
+      /prepared statement/.test(detail) ? 'prepared_statement' : 'database_query';
+    console.error(JSON.stringify({ event: 'dashboard_artifacts_failed', status: 500, errorCode: String(error.code || error.meta?.code || error.name || 'unknown').slice(0, 40), category }));
+    res.status(500).json({ success: false, message: 'Could not load resume analyzer data.' });
+  }
+});
+
+// Alias for ats stats
+router.get('/ats', requireAuth, requireCandidate, async (req, res) => {
+  try {
+    const stats = await getDashboardStats(req.user.id);
+    res.json({
+      ok: true,
+      success: true,
+      atsScore: stats.modules?.resume?.score || 0,
+      status: stats.modules?.resume?.status || 'Not Started',
+      data: stats
+    });
+  } catch (error) {
+    res.status(500).json({ ok: false, success: false, message: 'Could not load dashboard data.' });
+  }
+});
+
+module.exports = router;

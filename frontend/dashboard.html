@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Dashboard | Ascend</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/tour.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <style>
+    :root {
+      --primary: #8B5CF6;
+      --bg-dark: #0F172A;
+      --card-bg: #1E293B;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      display: block;
+      min-height: 100vh;
+    }
+
+    .nav-item {
+      padding: 12px 16px;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: block;
+      font-weight: 500;
+      border: none;
+      background: none;
+      text-align: left;
+      width: 100%;
+      font-size: 1rem;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+    }
+
+    .nav-item.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .user-profile {
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      background: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    /* Main Content */
+    .main {
+      padding: 40px;
+      overflow-y: auto; width: 100%;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 40px;
+    }
+
+    .h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    /* Dashboard Grid */
+    .grid-container {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 30px;
+    }
+
+    /* Hero Score Card */
+    .score-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 40px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      height: fit-content;
+    }
+
+    .score-circle {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: conic-gradient(var(--primary) 0%, rgba(255, 255, 255, 0.1) 0%);
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .score-inner {
+      width: 150px;
+      height: 150px;
+      background: var(--card-bg);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .score-val {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .score-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .verdict-badge {
+      background: rgba(139, 92, 246, 0.1);
+      color: var(--primary);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+
+    /* Modules Grid */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .module-card {
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: transform 0.2s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .module-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--primary);
+    }
+
+    .module-head {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .module-icon {
+      font-size: 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+    }
+
+    .module-score {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .module-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+
+    .module-status {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Bottom Row */
+    .bottom-row {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
+
+    .wide-card {
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--success);
+      width: 0%;
+      transition: width 1s;
+    }
+
+  </style>
+  <link rel="stylesheet" href="css/app-theme.css">
+</head>
+
+<body>
+<div id="app-navbar"></div>
+<!-- MAIN -->
+  <main class="main">
+    <div class="header">
+      <div>
+        <h1 class="h1">Career Readiness Dashboard</h1>
+      </div>
+      <div>
+        <!-- Refresh Button could go here -->
+      </div>
+    </div>
+
+    <div class="grid-container">
+
+      <!-- HERO SCORE -->
+      <div class="score-card">
+        <h3 style="margin-bottom: 24px; color: var(--text-muted);">OVERALL SCORE</h3>
+        <div class="score-circle" id="overall-chart">
+          <div class="score-inner">
+            <div class="score-val" id="overall-score">0</div>
+            <div class="score-label">/ 100</div>
+          </div>
+        </div>
+        <div class="verdict-badge" id="verdict-label">Analyzing...</div>
+        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;" id="insight-text">
+          Syncing your latest progress...
+        </p>
+      </div>
+
+      <!-- MODULES -->
+      <div class="modules-grid">
+
+        <!-- Resume -->
+        <div id="card-resume" class="module-card" onclick="location.href='resume_upload.html'">
+          <div class="module-head">
+            <div class="module-icon">📄</div>
+            <div class="module-score-group">
+              <div class="module-score" id="resume-score">--</div>
+              <div class="module-score-unit">out of 100</div>
+            </div>
+          </div>
+          <div>
+            <div class="module-name">Resume Strength</div>
+            <div class="module-status" id="resume-status">Checking...</div>
+            <div class="module-description">ATS score and resume quality</div>
+            <div class="module-progress" aria-hidden="true">
+              <div class="module-progress-fill" id="resume-progress"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Technical -->
+        <div id="card-tech" class="module-card" onclick="location.href='technical_test_setup.html'">
+          <div class="module-head">
+            <div class="module-icon">💻</div>
+            <div class="module-score-group">
+              <div class="module-score" id="tech-score">--</div>
+              <div class="module-score-unit">out of 100</div>
+            </div>
+          </div>
+          <div>
+            <div class="module-name">Technical Skills</div>
+            <div class="module-status" id="tech-status">Checking...</div>
+            <div class="module-description">Latest completed technical test score</div>
+            <div class="module-progress" aria-hidden="true">
+              <div class="module-progress-fill" id="tech-progress"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Communication -->
+        <div id="card-comm" class="module-card" onclick="location.href='communication_test.html'">
+          <div class="module-head">
+            <div class="module-icon">🗣️</div>
+            <div class="module-score-group">
+              <div class="module-score" id="comm-score">--</div>
+              <div class="module-score-unit">out of 100</div>
+            </div>
+          </div>
+          <div>
+            <div class="module-name">Communication</div>
+            <div class="module-status" id="comm-status">Checking...</div>
+            <div class="module-description">Communication assessment score</div>
+            <div class="module-progress" aria-hidden="true">
+              <div class="module-progress-fill" id="comm-progress"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interview -->
+        <div id="card-interview" class="module-card" onclick="location.href='mock_interview_setup.html'">
+          <div class="module-head">
+            <div class="module-icon">👔</div>
+            <div class="module-score-group">
+              <div class="module-score" id="interview-score">--</div>
+              <div class="module-score-unit">out of 100</div>
+            </div>
+          </div>
+          <div>
+            <div class="module-name">Mock Interview</div>
+            <div class="module-status" id="interview-status">Checking...</div>
+            <div class="module-description">Performance from interview practice</div>
+            <div class="module-progress" aria-hidden="true">
+              <div class="module-progress-fill" id="interview-progress"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BOTTOM ROW -->
+    <div class="bottom-row">
+      <div id="card-roadmap" class="wide-card" onclick="location.href='roadmap.html'" style="cursor: pointer;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+          <strong>Roadmap Progress</strong>
+          <span id="roadmap-meta" style="color: var(--primary);">Phase 1</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="roadmap-bar" style="width: 0%"></div>
+        </div>
+        <p style="margin-top: 12px; font-size: 0.9rem; color: var(--text-muted);" id="roadmap-next">
+          Next: Complete Phase 1 tasks
+        </p>
+      </div>
+
+      <div id="card-opportunities" class="wide-card" onclick="location.href='opportunities.html'"
+        style="cursor: pointer;">
+        <div style="font-size: 2rem; font-weight: 700; margin-bottom: 4px;" id="opps-saved">0</div>
+        <div style="color: var(--text-muted);">Opportunities Saved</div>
+        <div style="margin-top: 16px; font-size: 0.9rem; color: var(--primary);">View Applications &rarr;</div>
+      </div>
+    </div>
+
+    <!-- RESUME INTELLIGENCE, MATCHES & GENERATED DOWNLOADS ROW -->
+    <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+      
+      <!-- Recent Resumes Card -->
+      <div id="card-uploaded-resumes" class="wide-card">
+        <h3 style="font-size: 1.15rem; font-weight: 600; margin-bottom: 16px;">📄 Uploaded Resumes</h3>
+        <div id="dashboard-resumes-list">
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Loading resumes...</p>
+        </div>
+      </div>
+
+      <!-- Job Description Alignment Matches -->
+      <div id="card-job-scores" class="wide-card">
+        <h3 style="font-size: 1.15rem; font-weight: 600; margin-bottom: 16px;">🎯 Job Description Scores</h3>
+        <div id="dashboard-matches-list">
+          <p style="color: var(--text-muted); font-size: 0.9rem;">No job-description scores yet.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- GENERATED RESUMES & DOWNLOADS ROW -->
+    <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+      
+      <!-- Generated Resumes -->
+      <div id="card-generated-resumes" class="wide-card">
+        <h3 style="font-size: 1.15rem; font-weight: 600; margin-bottom: 16px;">📑 Generated Resumes</h3>
+        <div id="dashboard-generated-list">
+          <p style="color: var(--text-muted); font-size: 0.9rem;">No generated resumes yet.</p>
+        </div>
+      </div>
+
+      <!-- Quick Reports Card -->
+      <div id="card-candidate-reports" class="wide-card">
+        <h3 style="font-size: 1.15rem; font-weight: 600; margin-bottom: 14px;">📥 Candidate Analytics Reports</h3>
+        <div id="dashboard-reports-list">
+          <p style="color: var(--text-muted); font-size: 0.9rem;">No reports generated yet.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script src="js/userContext.js"></script>
+  <script src="js/tour.js"></script>
+  <script>
+    // Fetch Dashboard Stats
+    async function loadDashboard() {
+      const [dashboardResult, artifactsResult] = await Promise.allSettled([
+        loadDashboardData('/api/dashboard/stats', renderDashboard),
+        loadDashboardData('/api/dashboard/artifacts', renderDashboardArtifacts)
+      ]);
+
+      if (dashboardResult.status === 'rejected' && !UserContext.isSessionExpired(dashboardResult.reason)) {
+        console.error('Dashboard Load Failed', dashboardResult.reason);
+        renderDashboardLoadError();
+      }
+
+      if (artifactsResult.status === 'rejected' && !UserContext.isSessionExpired(artifactsResult.reason)) {
+        console.error('Dashboard Artifacts Load Failed', artifactsResult.reason);
+        renderDashboardArtifactsLoadError();
+      }
+    }
+
+    async function loadDashboardData(url, render) {
+      const response = await UserContext.fetchWithAuth(url, { cache: 'no-store' });
+      const result = await response.json();
+      if (!response.ok || !result.success || !result.data) {
+        throw new Error(result.error || result.message || 'Dashboard data was not returned.');
+      }
+      render(result.data);
+    }
+
+    function renderDashboardLoadError() {
+      document.getElementById('overall-score').textContent = '--';
+      document.getElementById('overall-chart').style.background = 'rgba(255,255,255,0.05)';
+      document.getElementById('verdict-label').textContent = 'Unavailable';
+      document.getElementById('insight-text').textContent = 'Progress summary unavailable. Resume Analyzer results load separately below.';
+      ['tech', 'comm', 'interview'].forEach(prefix => {
+        document.getElementById(`${prefix}-score`).textContent = '--';
+        document.getElementById(`${prefix}-status`).textContent = 'Unavailable';
+      });
+    }
+
+    function renderDashboardArtifactsLoadError() {
+      const resumeStatus = document.getElementById('resume-status');
+      if (resumeStatus.textContent === 'Checking...') {
+        document.getElementById('resume-score').textContent = '--';
+        resumeStatus.textContent = 'Unavailable';
+      }
+      ['dashboard-resumes-list', 'dashboard-matches-list', 'dashboard-generated-list', 'dashboard-reports-list']
+        .forEach(id => {
+          document.getElementById(id).innerHTML =
+            '<p style="color: var(--text-muted); font-size: 0.9rem;">Resume Analyzer data could not be loaded. Restart the backend with the latest code, then refresh.</p>';
+        });
+    }
+
+    function renderDashboard(data) {
+      // 1. Overall
+      const score = data.overall.score;
+      document.getElementById('overall-score').textContent = score;
+      document.getElementById('overall-chart').style.background =
+        `conic-gradient(${getColor(data.overall.color)} ${score}%, rgba(255,255,255,0.05) ${score}% 100%)`;
+
+      document.getElementById('verdict-label').textContent = data.overall.verdict;
+      document.getElementById('verdict-label').style.color = getColor(data.overall.color);
+      document.getElementById('insight-text').textContent = data.overall.insight;
+
+      // 2. Modules
+      updateModule('resume', data.modules.resume);
+      updateModule('tech', data.modules.technical);
+      updateModule('comm', data.modules.communication);
+      updateModule('interview', data.modules.interview);
+
+      // 3. Roadmap
+      const r = data.modules.roadmap;
+      document.getElementById('roadmap-meta').textContent = `Phase ${r.phase} • ${r.progress}%`;
+      document.getElementById('roadmap-bar').style.width = `${r.progress}%`;
+      document.getElementById('roadmap-next').textContent = `Next Action: ${r.nextAction}`;
+
+      // 4. Opps
+      document.getElementById('opps-saved').textContent = data.modules.opportunities.saved;
+    }
+
+    function renderDashboardArtifacts(data) {
+      renderResumesList(data.resumes);
+      renderMatchesList(data.matches);
+      renderGeneratedList(data.generatedResumes);
+      renderReportsList(data.reports);
+      if (data.resumeStrength === null || data.resumeStrength === undefined) {
+        updateModule('resume', { attempted: false, score: 0, status: 'Not Started' });
+      } else {
+        const score = Math.round(Number(data.resumeStrength));
+        updateModule('resume', { attempted: true, score, status: score > 70 ? 'Strong' : 'Needs Work' });
+      }
+    }
+
+    function escapeDashboard(value) {
+      return String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    }
+
+    function renderResumesList(resumes) {
+      const container = document.getElementById('dashboard-resumes-list');
+      if (!container) return;
+      if (!resumes || resumes.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">No resumes uploaded yet.</p>';
+        return;
+      }
+      container.innerHTML = resumes.map(r => `
+        <div style="font-weight: 600; font-size: 0.95rem; color: var(--app-ink); padding: 10px 0; border-bottom: 1px solid var(--app-line);">
+          ${escapeDashboard(r.filename)}
+        </div>
+      `).join('');
+    }
+
+    function handleDashboardDownloadError(error) {
+      if (!UserContext.isSessionExpired(error)) alert('Could not download this file. Please retry.');
+    }
+
+    async function downloadDashboardFile(url, filename) {
+      try { await UserContext.downloadWithAuth(url, filename); }
+      catch (error) { handleDashboardDownloadError(error); }
+    }
+
+    function renderMatchesList(matches) {
+      const container = document.getElementById('dashboard-matches-list');
+      if (!container) return;
+      if (!matches || matches.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">No job-description scores yet.</p>';
+        return;
+      }
+      container.innerHTML = matches.map(m => `
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--app-line);">
+          <span style="font-weight: 600; color: var(--app-ink);">${escapeDashboard(m.role || 'Target role')}</span>
+          <span style="font-weight: 700; color: #7c3aed; font-size: 1.1rem; flex-shrink: 0;">${Math.round(Number(m.matchScore))}%</span>
+        </div>
+      `).join('');
+    }
+
+    function renderGeneratedList(generated) {
+      const container = document.getElementById('dashboard-generated-list');
+      if (!container) return;
+      if (!generated || generated.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">No generated resumes yet.</p>';
+        return;
+      }
+      container.innerHTML = generated.map(g => {
+        const matchScores = (g.matchScores || []).map(score => `${Math.round(Number(score))}%`);
+        return `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--app-line);">
+          <div>
+            <div style="font-weight: 600; font-size: 0.95rem; color: var(--app-ink);">${escapeDashboard(g.filename || `${g.template} resume`)}</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">${escapeDashboard(g.template)}${g.sourceFilename ? ` · ${escapeDashboard(g.sourceFilename)}` : ''}</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">${new Date(g.date).toLocaleDateString()}</div>
+            ${matchScores.length ? `<div style="font-size: 0.8rem; color: var(--text-muted);">Job-description scores: ${matchScores.map(escapeDashboard).join(', ')}</div>` : ''}
+          </div>
+          <div style="display: flex; gap: 8px;">
+            ${g.pdfUrl ? `<button class="nav-item" style="width: auto; padding: 4px 10px; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.15);" data-download-url="${escapeDashboard(g.pdfUrl)}" data-download-filename="${escapeDashboard(g.filename || 'resume.pdf')}" onclick="downloadDashboardFile(this.dataset.downloadUrl, this.dataset.downloadFilename)">PDF</button>` : ''}
+            ${g.docxUrl ? `<button class="nav-item" style="width: auto; padding: 4px 10px; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.15);" data-download-url="${escapeDashboard(g.docxUrl)}" data-download-filename="${escapeDashboard(g.filename || 'resume.docx')}" onclick="downloadDashboardFile(this.dataset.downloadUrl, this.dataset.downloadFilename)">DOCX</button>` : ''}
+          </div>
+        </div>
+      `;
+      }).join('');
+    }
+
+    function renderReportsList(reports) {
+      const container = document.getElementById('dashboard-reports-list');
+      if (!container) return;
+      if (!reports || reports.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">No reports generated yet.</p>';
+        return;
+      }
+
+      container.innerHTML = reports.map(report => {
+        const type = String(report.type || '').toLowerCase();
+        const label = type === 'csv' ? 'Skills CSV Report' : 'Analysis PDF Report';
+        return `
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--app-line);">
+            <div>
+              <div style="font-weight: 600; font-size: 0.95rem; color: var(--app-ink);">${escapeDashboard(report.filename)}</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">${label}${report.sourceFilename ? ` · ${escapeDashboard(report.sourceFilename)}` : ''} · ${new Date(report.date).toLocaleDateString()}</div>
+            </div>
+            <button class="nav-item" style="width: auto; padding: 4px 10px; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.15);" data-download-url="/api/ats/download/${encodeURIComponent(report.filename)}" data-download-filename="${escapeDashboard(report.filename)}" onclick="downloadDashboardFile(this.dataset.downloadUrl, this.dataset.downloadFilename)">Download</button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateModule(prefix, data) {
+      document.getElementById(`${prefix}-score`).textContent = data.attempted ? data.score : '--';
+      document.getElementById(`${prefix}-status`).textContent = data.status;
+      const score = Number(data.score);
+      const progress = document.getElementById(`${prefix}-progress`);
+      progress.style.width = data.attempted && Number.isFinite(score)
+        ? `${Math.max(0, Math.min(100, score))}%`
+        : '0%';
+    }
+
+    function getColor(name) {
+      if (name === 'green') return '#10B981';
+      if (name === 'orange') return '#F59E0B';
+      return '#EF4444';
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', loadDashboard);
+  </script>
+  <script src="js/navbar.js"></script>
+</body>
+
+</html>

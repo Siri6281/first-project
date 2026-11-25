@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Technical Test Setup | ASCEND</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/navbar.css">
+  <style>
+    :root {
+      --accent: #6366f1;
+      --accent-2: #4f46e5;
+
+
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0c0c0e;
+      color: #fff;
+      margin: 0;
+      display: block;
+      min-height: 100vh;
+    }
+
+    /* ===== MAIN ===== */
+    .main {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 80px);
+      padding: clamp(10px, 2.4vh, 24px) 24px;
+      width: 100%;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .accent-gradient {
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    }
+
+    @media (max-height: 720px) {
+      .main {
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+
+      #test-setup-card {
+        padding: 16px;
+      }
+
+      #test-setup-header {
+        margin-bottom: 12px;
+      }
+
+      #test-setup-form {
+        gap: 10px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="css/app-theme.css">
+  <style>
+    body:has(#test-setup-form) .main {
+      min-height: calc(100vh - 80px);
+      padding: clamp(10px, 2.4vh, 24px) 24px;
+    }
+
+    body:has(#test-setup-form) .diff-btn {
+      border-color: #cbd5e1;
+      color: #334155;
+      background: #f8fafc;
+    }
+
+    body:has(#test-setup-form) .diff-btn:hover {
+      border-color: #818cf8;
+      background: #f1f5ff;
+    }
+
+    body:has(#test-setup-form) .diff-btn[aria-pressed="true"] {
+      border-color: #6366f1;
+      color: #4338ca;
+      background: #eef2ff;
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.14);
+    }
+
+    @media (max-height: 720px) {
+      body:has(#test-setup-form) .main {
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      body:has(#test-setup-form) .main {
+        min-height: 0;
+        padding: 12px 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div id="app-navbar"></div>
+<main class="main">
+    <div id="test-setup-card" class="max-w-xl w-full glass rounded-3xl p-6 shadow-2xl">
+      <div id="test-setup-header" class="text-center mb-5">
+        <h1 class="text-3xl font-bold mb-2">Technical Proficiency Test</h1>
+        <p class="text-gray-400">Rule-based assessment for Computer Science subjects</p>
+      </div>
+
+      <form id="test-setup-form" class="grid gap-4">
+        <!-- Subject Selection -->
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2">Select Subject</label>
+          <select id="subject" name="subject" required
+            class="w-full bg-[#16161a] border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+            <option value="" disabled selected>Choose a subject...</option>
+            <option value="data-structures">Data Structures</option>
+            <option value="algorithms">Algorithms</option>
+            <option value="operating-systems">Operating Systems</option>
+            <option value="computer-networks">Computer Networks</option>
+            <option value="dbms">DBMS</option>
+            <option value="oops">OOPs</option>
+            <option value="java">Java</option>
+            <option value="python">Python</option>
+            <option value="web-technologies">Web Technologies</option>
+          </select>
+        </div>
+
+        <!-- Difficulty Selection -->
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-2">Difficulty Level</label>
+          <div class="grid grid-cols-3 gap-3" id="difficulty-grid">
+            <button type="button" class="diff-btn border border-slate-200 bg-slate-50 rounded-xl py-3 text-sm font-medium text-slate-700 hover:border-indigo-400 transition-all" data-difficulty="Easy" aria-pressed="false" onclick="selectDifficulty(this, 'Easy')">Easy</button>
+            <button type="button" class="diff-btn border border-slate-200 bg-slate-50 rounded-xl py-3 text-sm font-medium text-slate-700 hover:border-indigo-400 transition-all" data-difficulty="Medium" aria-pressed="false" onclick="selectDifficulty(this, 'Medium')">Medium</button>
+            <button type="button" class="diff-btn border border-slate-200 bg-slate-50 rounded-xl py-3 text-sm font-medium text-slate-700 hover:border-indigo-400 transition-all" data-difficulty="Hard" aria-pressed="false" onclick="selectDifficulty(this, 'Hard')">Hard</button>
+          </div>
+        </div>
+        <p id="config-status" class="text-sm text-red-400" role="status" aria-live="polite"></p>
+
+        <!-- Rules Summary -->
+        <div class="bg-indigo-500/5 rounded-2xl p-3 border border-indigo-500/10 mb-4">
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-2">Test Rules</h3>
+          <ul class="text-sm text-gray-300 space-y-1" id="rules-list">
+            <li>• Easy: 10 Questions</li>
+            <li>• Medium: 10 Questions</li>
+            <li>• Hard: 20 Questions</li>
+            <li>• Deterministic scoring (No AI)</li>
+          </ul>
+        </div>
+
+        <button type="submit"
+          class="w-full accent-gradient hover:opacity-90 text-white font-bold py-3 rounded-xl shadow-lg transition-all transform hover:scale-[1.02]">
+          Start Assessment
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <script src="js/userContext.js"></script>
+  <script>
+    const TEST_API_BASE = '/api/test';
+    const FALLBACK_CONFIG = {
+      subjects: Array.from(document.querySelectorAll('#subject option'))
+        .filter(option => option.value)
+        .map(option => ({ id: option.value, name: option.textContent })),
+      difficulties: Array.from(document.querySelectorAll('#difficulty-grid [data-difficulty]'))
+        .map(button => button.dataset.difficulty)
+    };
+    let selectedDiff = '';
+
+    function renderConfig(config) {
+      const subjectSelect = document.getElementById('subject');
+      const currentSubject = subjectSelect.value;
+      const currentDifficulty = selectedDiff;
+      Array.from(subjectSelect.options).slice(1).forEach(option => option.remove());
+      config.subjects.forEach(subject => {
+        const option = document.createElement('option');
+        option.value = subject.id;
+        option.textContent = subject.name;
+        subjectSelect.appendChild(option);
+      });
+      if (config.subjects.some(subject => subject.id === currentSubject)) {
+        subjectSelect.value = currentSubject;
+      }
+
+      const diffGrid = document.getElementById('difficulty-grid');
+      diffGrid.innerHTML = '';
+      config.difficulties.forEach(difficulty => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'diff-btn border border-slate-200 bg-slate-50 rounded-xl py-3 text-sm font-medium text-slate-700 hover:border-indigo-400 transition-all';
+        button.textContent = difficulty;
+        button.dataset.difficulty = difficulty;
+        button.setAttribute('aria-pressed', 'false');
+        button.onclick = () => selectDifficulty(button, difficulty);
+        diffGrid.appendChild(button);
+      });
+      selectedDiff = '';
+      const selectedButton = Array.from(diffGrid.querySelectorAll('.diff-btn'))
+        .find(button => button.textContent === currentDifficulty);
+      if (selectedButton) selectDifficulty(selectedButton, currentDifficulty);
+    }
+
+    async function loadConfig() {
+      try {
+        const res = await fetch(`${TEST_API_BASE}/config`);
+        if (!res.ok) throw new Error(`Test configuration request failed with status ${res.status}.`);
+        const data = await res.json();
+        if (!Array.isArray(data.subjects) || !data.subjects.length ||
+            !Array.isArray(data.difficulties) || !data.difficulties.length) {
+          throw new Error('Test configuration returned no subjects or difficulty levels.');
+        }
+        renderConfig(data);
+        document.getElementById('config-status').textContent = '';
+      } catch (e) {
+        console.error('Config Load Error', e);
+        document.getElementById('config-status').textContent =
+          'Could not load test configuration from the server. Built-in options are shown; retry before starting if questions fail to load.';
+      }
+    }
+
+    function selectDifficulty(btn, diff) {
+      document.querySelectorAll('.diff-btn').forEach(b => {
+        b.setAttribute('aria-pressed', 'false');
+      });
+      btn.setAttribute('aria-pressed', 'true');
+      selectedDiff = diff;
+    }
+
+    document.getElementById('test-setup-form').onsubmit = async (e) => {
+      e.preventDefault();
+      const subject = document.getElementById('subject').value;
+      if (!subject || !selectedDiff) {
+        alert("Please select both subject and difficulty");
+        return;
+      }
+
+      // Save choice to session storage
+      sessionStorage.setItem('testConfig', JSON.stringify({
+        subject,
+        difficulty: selectedDiff
+      }));
+
+      window.location.href = 'technical_test_session.html';
+    };
+
+    renderConfig(FALLBACK_CONFIG);
+    loadConfig();
+  </script>
+  <script src="js/navbar.js"></script>
+</body>
+
+</html>
